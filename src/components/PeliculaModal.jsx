@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { crearPelicula, actualizarPelicula } from '../services/api';
+import { crearPelicula, actualizarPelicula, calificarPelicula } from '../services/api';
 import '../styles/PeliculaCard.css';
 
 function PeliculaModal({ pelicula, onClose, onGuardar }) {
@@ -10,6 +10,8 @@ function PeliculaModal({ pelicula, onClose, onGuardar }) {
     categoriaId: '1',
   });
   const [loading, setLoading] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
 
   useEffect(() => {
     if (pelicula) {
@@ -19,6 +21,7 @@ function PeliculaModal({ pelicula, onClose, onGuardar }) {
         peliculaSinopsis: pelicula.peliculaSinopsis,
         categoriaId: '1', // Ajustar según categoría real
       });
+      setRating(pelicula.peliculaRatingPromedio);
     }
   }, [pelicula]);
 
@@ -28,6 +31,23 @@ function PeliculaModal({ pelicula, onClose, onGuardar }) {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleCalificar = async (valor) => {
+    if (loading) return;
+
+    setLoading(true);
+    try {
+      await calificarPelicula(pelicula.peliculaId, valor);
+      setRating(valor);
+      alert('¡Calificación guardada exitosamente!');
+      onGuardar();
+      onClose();
+    } catch (error) {
+      alert('Error al calificar: ' + (error.mensaje || 'Error desconocido'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -109,6 +129,28 @@ function PeliculaModal({ pelicula, onClose, onGuardar }) {
               rows={4}
             />
           </div>
+
+          {pelicula && (
+            <div className="form-group">
+              <label>Calificar:</label>
+              <div className="estrellas">
+                {[1, 2, 3, 4, 5].map((estrella) => (
+                  <button
+                    key={estrella}
+                    type="button"
+                    className={`estrella ${
+                      (hoverRating || rating) >= estrella ? 'activa' : ''
+                    }`}
+                    onMouseEnter={() => setHoverRating(estrella)}
+                    onMouseLeave={() => setHoverRating(0)}
+                    onClick={() => handleCalificar(estrella)}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="modal-actions">
             <button 

@@ -1,30 +1,7 @@
-import { useState } from 'react';
-import { calificarPelicula } from '../services/api';
 import '../styles/PeliculaCard.css';
 
-function PeliculaCard({ pelicula, onCalificar, onEditar, onEliminar }) {
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [loading, setLoading] = useState(false);
+function PeliculaCard({ pelicula, onEditar, onEliminar }) {
   const userRole = localStorage.getItem('userRole');
-
-  const handleCalificar = async (valor) => {
-    if (loading) return;
-    
-    setLoading(true);
-    try {
-      await calificarPelicula(pelicula.peliculaId, valor);
-      setRating(valor);
-      if (onCalificar) {
-        onCalificar();
-      }
-      alert('¡Calificación guardada exitosamente!');
-    } catch (error) {
-      alert('Error al calificar: ' + (error.mensaje || 'Error desconocido'));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="pelicula-card">
@@ -41,26 +18,6 @@ function PeliculaCard({ pelicula, onCalificar, onEditar, onEliminar }) {
       </div>
 
       <p className="pelicula-sinopsis">{pelicula.peliculaSinopsis}</p>
-
-      <div className="pelicula-calificar">
-        <span className="calificar-label">Calificar:</span>
-        <div className="estrellas">
-          {[1, 2, 3, 4, 5].map((estrella) => (
-            <button
-              key={estrella}
-              className={`estrella ${
-                (hoverRating || rating) >= estrella ? 'activa' : ''
-              }`}
-              onMouseEnter={() => setHoverRating(estrella)}
-              onMouseLeave={() => setHoverRating(0)}
-              onClick={() => handleCalificar(estrella)}
-              disabled={loading}
-            >
-              ★
-            </button>
-          ))}
-        </div>
-      </div>
 
       {userRole === 'ROLE_ADMIN' && (
         <div className="pelicula-acciones">
