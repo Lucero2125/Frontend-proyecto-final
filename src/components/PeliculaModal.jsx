@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { crearPelicula, actualizarPelicula } from '../services/api';
+import { crearPelicula, actualizarPelicula, calificarPelicula } from '../services/api';
 import '../styles/PeliculaCard.css';
 
 function PeliculaModal({ pelicula, onClose, onGuardar }) {
@@ -8,6 +8,7 @@ function PeliculaModal({ pelicula, onClose, onGuardar }) {
     peliculaAnio: new Date().getFullYear(),
     peliculaSinopsis: '',
     categoriaId: '1',
+    calificacion: '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -18,6 +19,7 @@ function PeliculaModal({ pelicula, onClose, onGuardar }) {
         peliculaAnio: pelicula.peliculaAnio,
         peliculaSinopsis: pelicula.peliculaSinopsis,
         categoriaId: '1', // Ajustar según categoría real
+        calificacion: '',
       });
     }
   }, [pelicula]);
@@ -36,7 +38,17 @@ function PeliculaModal({ pelicula, onClose, onGuardar }) {
 
     try {
       if (pelicula) {
-        await actualizarPelicula(pelicula.peliculaId, formData);
+        await actualizarPelicula(pelicula.peliculaId, {
+          peliculaNombre: formData.peliculaNombre,
+          peliculaAnio: formData.peliculaAnio,
+          peliculaSinopsis: formData.peliculaSinopsis,
+          categoriaId: formData.categoriaId,
+        });
+
+        if (formData.calificacion) {
+          await calificarPelicula(pelicula.peliculaId, formData.calificacion);
+        }
+
         alert('Película actualizada exitosamente');
       } else {
         await crearPelicula(formData);
@@ -109,6 +121,22 @@ function PeliculaModal({ pelicula, onClose, onGuardar }) {
               rows={4}
             />
           </div>
+
+          {pelicula && (
+            <div className="form-group">
+              <label>Calificación (1-5)</label>
+              <input
+                type="number"
+                name="calificacion"
+                value={formData.calificacion || ''}
+                onChange={handleChange}
+                min={1}
+                max={5}
+                step={1}
+                placeholder="Deja tu calificación..."
+              />
+            </div>
+          )}
 
           <div className="modal-actions">
             <button 
