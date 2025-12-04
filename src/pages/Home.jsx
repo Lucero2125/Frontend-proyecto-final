@@ -174,7 +174,7 @@ function Home() {
         {error && (
           <div className="error-container">
             <p>⚠️ {error}</p>
-            <button onClick={cargarPeliculas}>Reintentar</button>
+            <button onClick={cargarPeliculas}>Asegurate que haya conexión al servidor. Reintentar</button>
           </div>
         )}
 
