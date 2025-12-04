@@ -18,7 +18,7 @@ function PeliculaModal({ pelicula, onClose, onGuardar }) {
         peliculaNombre: pelicula.peliculaNombre,
         peliculaAnio: pelicula.peliculaAnio,
         peliculaSinopsis: pelicula.peliculaSinopsis,
-        categoriaId: '1', // Ajustar según categoría real
+        categoriaId: '1', 
         calificacion: '',
       });
     }
