@@ -133,6 +133,16 @@ function Home() {
             <option value="">Todas las categorías</option>
             <option value="1">Ciencia Ficción</option>
             <option value="2">Comedia</option>
+            <option value="3">Acción</option>
+            <option value="4">Drama</option>
+            <option value="5">Romance</option>
+            <option value="6">Terror</option>
+            <option value="7">Suspenso</option>
+            <option value="8">Aventura</option>
+            <option value="9">Animación</option>
+            <option value="10">Documental</option>
+            <option value="11">Fantasía</option>
+            <option value="12">Crimen</option>
           </select>
 
           <input
